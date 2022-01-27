@@ -1,0 +1,88 @@
+{
+  "parser": "babel-eslint",
+    "env": {
+      "commonjs": true,
+      "es6": true
+    },
+    "plugins": ["simple-import-sort", "import"],
+    "rules": {
+      "indent": ["error", 4, { "SwitchCase": 1 }],
+      "linebreak-style": ["error", "unix"],
+      "no-console": 1,
+      "no-unused-vars": 1,
+      "quotes": ["error", "single"],
+      "semi": ["error", "always"],
+      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
+      "eol-last": ["error", "always"],
+      "comma-dangle": ["error", {
+        "arrays": "never",
+        "objects": "never",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never"
+      }],
+      "comma-style": ["error", "last"],
+      "comma-spacing": ["error", { "before": false, "after": true }],
+      "newline-before-return" : "error",
+      "object-curly-spacing": ["error", "always"],
+      "array-bracket-spacing": ["error", "never"],
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+      "import/first": "error",
+      "import/newline-after-import": "error",
+      "import/no-duplicates": "error"
+    },
+    "overrides": [{
+      "files": ["backend/**/*"],
+      "extends": "eslint:recommended",
+      "env": {
+        "node": true,
+        "browser": false
+      },
+      "globals": {
+        "backend": true
+      }
+    }, {
+      "files": ["frontend/**/*"],
+      "extends": "plugin:react/recommended",
+      "env": {
+        "node": false,
+        "browser": true
+      },
+      "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "react/no-unescaped-entities": "warn",
+        "react/jsx-curly-spacing": [2, {"when": "always", "children": true}]
+      },
+      "settings": {
+        "react": {
+          "version": "detect"
+        }
+      }
+    }, {
+      "files": ["backend/**/*", "frontend/**/*"],
+      "env": { "node": true },
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+        {
+          "groups": [
+              // Packages. `react` related packages come first.
+              ["^react", "^@?\\w"],
+              // Internal packages.
+              ["^(components|lib|styles|context|utils|config)(/.*|$)"],
+              // Side effect imports.
+              ["^\\u0000"],
+              // Other relative imports. Put same-folder imports and `.` last.
+              ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+              // Parent imports. Put `..` last.
+              ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+              // Style imports.
+              ["^.+\\.s?css$"],
+            ]
+        }
+      ]
+    }
+  }]
+}

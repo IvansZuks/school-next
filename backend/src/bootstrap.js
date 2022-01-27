@@ -1,26 +1,27 @@
-const fs = require("fs");
-const { pages, globals, leadFormSubmissions } = require("../data/data");
-const set = require("lodash.set");
+const fs = require('fs');
+const { pages, globals, leadFormSubmissions } = require('../data/data');
+const set = require('lodash.set');
 
 async function isFirstRun() {
   const pluginStore = strapi.store({
     environment: strapi.config.environment,
-    type: "type",
-    name: "setup",
+    type: 'type',
+    name: 'setup'
   });
-  const initHasRun = await pluginStore.get({ key: "initHasRun" });
-  await pluginStore.set({ key: "initHasRun", value: true });
+  const initHasRun = await pluginStore.get({ key: 'initHasRun' });
+  await pluginStore.set({ key: 'initHasRun', value: true });
+  
   return !initHasRun;
 }
 
 async function setPublicPermissions(newPermissions) {
   // Find the ID of the public role
   const publicRole = await strapi
-    .query("plugin::users-permissions.role")
+    .query('plugin::users-permissions.role')
     .findOne({
       where: {
-        type: "public",
-      },
+        type: 'public'
+      }
     });
 
   // Create the new permissions and link them to the public role
@@ -28,11 +29,11 @@ async function setPublicPermissions(newPermissions) {
   Object.keys(newPermissions).map(controller => {
     const actions = newPermissions[controller];
     const permissionsToCreate = actions.map(action => {
-      return strapi.query("plugin::users-permissions.permission").create({
+      return strapi.query('plugin::users-permissions.permission').create({
         data: {
           action: `api::${controller}.${controller}.${action}`,
-          role: publicRole.id,
-        },
+          role: publicRole.id
+        }
       });
     });
     allPermissionsToCreate.push(...permissionsToCreate);
@@ -42,7 +43,8 @@ async function setPublicPermissions(newPermissions) {
 
 function getFileSizeInBytes(filePath) {
   const stats = fs.statSync(filePath);
-  const fileSizeInBytes = stats["size"];
+  const fileSizeInBytes = stats['size'];
+  
   return fileSizeInBytes;
 }
 
@@ -51,14 +53,14 @@ function getFileData(fileName) {
 
   // Parse the file metadata
   const size = getFileSizeInBytes(filePath);
-  const ext = fileName.split(".").pop();
-  const mimeType = `image/${ext === "svg" ? "svg+xml" : ext}`;
+  const ext = fileName.split('.').pop();
+  const mimeType = `image/${ext === 'svg' ? 'svg+xml' : ext}`;
 
   return {
     path: filePath,
     name: fileName,
     size,
-    type: mimeType,
+    type: mimeType
   };
 }
 
@@ -71,17 +73,17 @@ async function createEntry(model, entry, files) {
         const [fileName] = file.name.split('.');
         // Upload each individual file
         const uploadedFile = await strapi
-          .plugin("upload")
-          .service("upload")
+          .plugin('upload')
+          .service('upload')
           .upload({
             files: file,
             data: {
               fileInfo: {
                 alternativeText: fileName,
                 caption: fileName,
-                name: fileName,
-              },
-            },
+                name: fileName
+              }
+            }
           });
 
         // Attach each file to its entry
@@ -93,7 +95,7 @@ async function createEntry(model, entry, files) {
     const createdEntry = await strapi.entityService.create(
       `api::${model}.${model}`,
       {
-        data: entry,
+        data: entry
       }
     );
   } catch (e) {
@@ -104,8 +106,8 @@ async function createEntry(model, entry, files) {
 async function importPages(pages) {
   const getPageCover = (slug) => {
     switch (slug) {
-      case "":
-        return getFileData("undraw-content-team.png");
+      case '':
+        return getFileData('undraw-content-team.png');
       default:
         return null;
     }
@@ -115,21 +117,21 @@ async function importPages(pages) {
     const files = {};
     const shareImage = getPageCover(page.slug);
     if (shareImage) {
-      files["metadata.shareImage"] = shareImage;
+      files['metadata.shareImage'] = shareImage;
     }
     // Check if dynamic zone has attached files
     page.contentSections.forEach((section, index) => {
-      if (section.__component === "sections.hero") {
+      if (section.__component === 'sections.hero') {
         files[`contentSections.${index}.picture`] = getFileData(
-          "undraw-content-team.svg"
+          'undraw-content-team.svg'
         );
-      } else if (section.__component === "sections.feature-rows-group") {
+      } else if (section.__component === 'sections.feature-rows-group') {
         const getFeatureMedia = (featureIndex) => {
           switch (featureIndex) {
             case 0:
-              return getFileData("undraw-design-page.svg");
+              return getFileData('undraw-design-page.svg');
             case 1:
-              return getFileData("undraw-create-page.svg");
+              return getFileData('undraw-create-page.svg');
             default:
               return null;
           }
@@ -138,15 +140,15 @@ async function importPages(pages) {
           files[`contentSections.${index}.features.${featureIndex}.media`] =
             getFeatureMedia(featureIndex);
         });
-      } else if (section.__component === "sections.feature-columns-group") {
+      } else if (section.__component === 'sections.feature-columns-group') {
         const getFeatureMedia = (featureIndex) => {
           switch (featureIndex) {
             case 0:
-              return getFileData("preview.svg");
+              return getFileData('preview.svg');
             case 1:
-              return getFileData("devices.svg");
+              return getFileData('devices.svg');
             case 2:
-              return getFileData("palette.svg");
+              return getFileData('palette.svg');
             default:
               return null;
           }
@@ -155,60 +157,60 @@ async function importPages(pages) {
           files[`contentSections.${index}.features.${featureIndex}.icon`] =
             getFeatureMedia(featureIndex);
         });
-      } else if (section.__component === "sections.testimonials-group") {
+      } else if (section.__component === 'sections.testimonials-group') {
         section.logos.forEach((logo, logoIndex) => {
           files[`contentSections.${index}.logos.${logoIndex}.logo`] =
-            getFileData("logo.png");
+            getFileData('logo.png');
         });
         section.testimonials.forEach((testimonial, testimonialIndex) => {
           files[
             `contentSections.${index}.testimonials.${testimonialIndex}.logo`
-          ] = getFileData("logo.png");
+          ] = getFileData('logo.png');
           files[
             `contentSections.${index}.testimonials.${testimonialIndex}.picture`
-          ] = getFileData("user.png");
+          ] = getFileData('user.png');
         });
       }
     });
 
-    await createEntry("page", page, files);
+    await createEntry('page', page, files);
   });
 }
 
 async function importGlobal() {
   // Add images
   const files = {
-    favicon: getFileData("favicon.png"),
-    "metadata.shareImage": getFileData("undraw-content-team.png"),
-    "navbar.logo": getFileData("logo.png"),
-    "footer.logo": getFileData("logo.png"),
+    favicon: getFileData('favicon.png'),
+    'metadata.shareImage': getFileData('undraw-content-team.png'),
+    'navbar.logo': getFileData('logo.png'),
+    'footer.logo': getFileData('logo.png')
   };
 
   // Create entry
   globals.forEach(async (locale) => {
-    await createEntry("global", locale, files);
+    await createEntry('global', locale, files);
   });
 }
 
 async function importLeadFormSubmissionData() {
   leadFormSubmissions.forEach(async (submission) => {
-    await createEntry("lead-form-submissions", submission);
+    await createEntry('lead-form-submissions', submission);
   });
 }
 
 async function importSeedData() {
   // Allow read of application content types
   await setPublicPermissions({
-    global: ["find"],
-    page: ["find", "findOne"],
-    "lead-form-submission": ["create"],
+    global: ['find'],
+    page: ['find', 'findOne'],
+    'lead-form-submission': ['create']
   });
 
-  await strapi.query("plugin::i18n.locale").create({
+  await strapi.query('plugin::i18n.locale').create({
     data: {
-      name: "French (fr)",
-      code: "fr",
-    },
+      name: 'French (fr)',
+      code: 'fr'
+    }
   });
 
   // Create all entries
@@ -223,7 +225,7 @@ module.exports = async () => {
     try {
       await importSeedData();
     } catch (error) {
-      console.log("Could not import seed data");
+      console.log('Could not import seed data');
       console.error(error);
     }
   }

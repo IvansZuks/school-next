@@ -1,9 +1,9 @@
-import qs from "qs"
+import qs from 'qs';
 
 export function getStrapiURL(path) {
-  return `${
-    process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337"
-  }${path}`
+    return `${
+        process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+    }${path}`;
 }
 
 /**
@@ -14,30 +14,32 @@ export function getStrapiURL(path) {
  * @returns Parsed API call response
  */
 export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
-  // Merge default and user options
-  const mergedOptions = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    ...options,
-  }
+    // Merge default and user options
+    const mergedOptions = {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        ...options
+    };
 
-  // Build request URL
-  const queryString = qs.stringify(urlParamsObject)
-  const requestUrl = `${getStrapiURL(
-    `/api${path}${queryString ? `?${queryString}` : ""}`
-  )}`
+    // Build request URL
+    const queryString = qs.stringify(urlParamsObject);
+    const requestUrl = `${getStrapiURL(
+        `/api${path}${queryString ? `?${queryString}` : ''}`
+    )}`;
 
-  // Trigger API call
-  const response = await fetch(requestUrl, mergedOptions)
+    // Trigger API call
+    const response = await fetch(requestUrl, mergedOptions);
 
-  // Handle response
-  if (!response.ok) {
-    console.error(response.statusText)
-    throw new Error(`An error occured please try again`)
-  }
-  const data = await response.json()
-  return data
+    // Handle response
+    if (!response.ok) {
+    // eslint-disable-next-line no-console
+        console.error(response.statusText);
+        throw new Error('An error occured please try again');
+    }
+    const data = await response.json();
+  
+    return data;
 }
 
 /**
@@ -48,15 +50,15 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
  * @param {boolean} options.preview router isPreview value
  */
 export async function getPageData({ slug, locale, preview }) {
-  // Find the pages that match this slug
-  const gqlEndpoint = getStrapiURL("/graphql")
-  const pagesRes = await fetch(gqlEndpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `
+    // Find the pages that match this slug
+    const gqlEndpoint = getStrapiURL('/graphql');
+    const pagesRes = await fetch(gqlEndpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query: `
         fragment FileParts on UploadFileEntityResponse {
           data {
             id
@@ -238,34 +240,34 @@ export async function getPageData({ slug, locale, preview }) {
           }
         }      
       `,
-      variables: {
-        slug,
-        publicationState: preview ? "PREVIEW" : "LIVE",
-        locale,
-      },
-    }),
-  })
+            variables: {
+                slug,
+                publicationState: preview ? 'PREVIEW' : 'LIVE',
+                locale
+            }
+        })
+    });
 
-  const pagesData = await pagesRes.json()
-  // Make sure we found something, otherwise return null
-  if (pagesData.data?.pages == null || pagesData.data.pages.length === 0) {
-    return null
-  }
+    const pagesData = await pagesRes.json();
+    // Make sure we found something, otherwise return null
+    if (pagesData.data?.pages == null || pagesData.data.pages.length === 0) {
+        return null;
+    }
 
-  // Return the first item since there should only be one result per slug
-  return pagesData.data.pages.data[0]
+    // Return the first item since there should only be one result per slug
+    return pagesData.data.pages.data[0];
 }
 
 // Get site data from Strapi (metadata, navbar, footer...)
 export async function getGlobalData(locale) {
-  const gqlEndpoint = getStrapiURL("/graphql")
-  const globalRes = await fetch(gqlEndpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `
+    const gqlEndpoint = getStrapiURL('/graphql');
+    const globalRes = await fetch(gqlEndpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query: `
         fragment FileParts on UploadFileEntityResponse {
           data {
             id
@@ -340,12 +342,13 @@ export async function getGlobalData(locale) {
           }
         }      
       `,
-      variables: {
-        locale,
-      },
-    }),
-  })
+            variables: {
+                locale
+            }
+        })
+    });
 
-  const global = await globalRes.json()
-  return global.data.global
+    const global = await globalRes.json();
+  
+    return global.data.global;
 }
