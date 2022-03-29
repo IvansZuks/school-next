@@ -1,0 +1,38 @@
+@import '@/styles/abstract/variables.scss';
+@import '@/styles/abstract/mixins.scss';
+
+.MenuItem {
+    border: 4px solid $color-radical-red;
+    border-radius: 0 0 15px 15px;
+    border-top: none;
+    left: 0;
+    min-height: 60px;
+    min-width: 200px;
+    position: absolute;
+
+    &__Grid {
+        background: linear-gradient($color-radical-red, $color-crusta);
+        border-radius: 0 0 10px 10px;
+        display: grid;
+        grid-gap: 5px;
+        grid-template: auto / 88px 88px 88px 88px;
+        padding: 0;
+
+        @include desktop {
+            grid-gap: 4px;
+            grid-template: auto auto / 98px 98px;
+            margin: auto;
+        }
+
+        &__Item {
+            background: white;
+            border-radius: 15px;
+            cursor: pointer;
+            list-style: none;
+
+            &:hover {
+                background: $color-black-haze;
+            }
+        }
+    }
+}

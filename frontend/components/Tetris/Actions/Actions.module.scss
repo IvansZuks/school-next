@@ -1,0 +1,31 @@
+.Actions {
+    height: 400px;
+    width: 200px;
+    text-align: center;
+    background-color: #00b8a9;
+
+    &__Btn {
+        height: 30px;
+        border-radius: 10px;
+        display: block;
+        margin: 20px auto;
+        width: 100px;
+        background-color: #f8f3d4;
+        border-color: #903749;
+    }
+
+    &__Score {
+        border: 2px solid black;
+        border-radius: 10px;
+        height: 60px;
+        width: 145px;
+        margin: 40px auto 0 auto;
+        font-size: 18px;
+        background-color: #f8f3d4;
+        border-color: #903749;
+
+        &__Text {
+            display: block;
+        }
+    }
+}

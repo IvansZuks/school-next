@@ -1,0 +1,44 @@
+@import '@/styles/abstract/variables.scss';
+@import '@/styles/abstract/mixins.scss';
+
+.Menu {
+    background: linear-gradient($color-crusta, $color-radical-red);
+    height: 60px;
+
+    @include desktop {
+        padding: 0 200px;
+    }
+
+    &__List {
+        display: flex;
+        font-size: 20px;
+        justify-content: space-between;
+        line-height: 60px;
+        list-style-type: none;
+        margin: 0;
+        padding: 0 2px;
+        text-align: center;
+
+        &__Item {
+            cursor: pointer;
+            text-align: center;
+            width: 93px;
+
+            @include desktop {
+                padding: 0;
+                width: 100px;
+            }
+
+            &_active {
+                border-radius: 15px 15px 0 0;
+                box-shadow: inset 0 0 15px 10px red;
+            }
+
+            &__Wraper {
+                @include desktop {
+                    position: relative;
+                }
+            }
+        }
+    }
+}
