@@ -23,6 +23,7 @@ export default function FieldComponent({ matrixData, fullLine }) {
 
     return(
         <div className={ Field }>
+            { matrixData } 
             <div className={ Field__Matrix }>
                 { matrix.map((row, index) => (
                     row.map((square, key) => (
