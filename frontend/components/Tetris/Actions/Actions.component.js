@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useEffect } from 'react/cjs/react.development';
-import { position } from 'tailwindcss/lib/plugins';
+import { clone, checkMatrix} from "@/utils/hooks";
 
 import {
     Actions,
@@ -15,8 +14,8 @@ export default function ActionsComponent({
     setMatrixData = () => {}, 
     matrixData = [],
     setFullLine = () => {},
-    positionY = 0,
-    setPositionX = () => {}
+    helperMatrix = [],
+    setHelperMatrix = () => {}
 }) {
     const [score, setScore] = useState(0);
     const [isButtonLocked, setIsButtonLocked] = useState(false);
@@ -39,63 +38,74 @@ export default function ActionsComponent({
     const handleAdd = useCallback(() => {
         setIsButtonLocked(true);
         let previousMatrixData = [...matrixData];
-        console.log(coordinates);
-        // let row = previousMatrixData.reduce((acc, row, index) => {
-        //     if (row[randomIndex] || row[randomIndex + 1]) {
-        //         acc.push(index - 1);
-        //     }
-        //
-        //     return acc;
-        // }, [])[0] ?? 7;
-        //
-        // if(row < 0) {
-        //     alert('game over!!!!');
-        //     return
-        // }
 
         previousMatrixData[coordinates[0]][coordinates[1]] = 1;
         previousMatrixData[coordinates[0]][coordinates[1] + 1] = 1;
-
         setMatrixData(previousMatrixData);
 
-        // let result = previousMatrixData.reduce((acc, row, index) => {
-        //     if (row.some((elem) => elem === 0)) {
-        //         acc.push(row);
-        //     }
-        //
-        //     return acc;
-        // }, []);
-        //
-        // if(result.length < previousMatrixData.length) {
-        //     result.unshift([0,0,0,0,0,0,0,0]);
-        //     setMatrixData(result);
-        //     setScore(score + 1);
-        // }
-        
     }, [setMatrixData, setScore, setFullLine, matrixData, score]);
 
-    // const changePosition = useCallback(() => {
-    //     let activeMatrix = [...matrixData];
-    //
-    // }, []);
-
-    // console.log(matrixData);
     const handler = useCallback(
         (event) => {
             let coordinatesClone = [...coordinates];
+            let helperMatrixClone = clone(helperMatrix);
             switch (event.keyCode) {
                 case 37:
-                    // setCoordinates()
+                    coordinatesClone[1] = coordinatesClone[1] - 1 > 0 ? coordinatesClone[1] - 1 : 0;
+
+                    if (helperMatrix[coordinatesClone[0]][coordinatesClone[1]] === 1) {
+                        coordinatesClone[1] = coordinatesClone[1] + 1;
+                    }
+
+                    setCoordinates([coordinatesClone[0], coordinatesClone[1]]);
+                    helperMatrixClone[coordinatesClone[0]][coordinatesClone[1]] = 1;
+                    helperMatrixClone[coordinatesClone[0]][coordinatesClone[1] + 1] = 1;
+                    setMatrixData(helperMatrixClone);
+
+                    if (checkMatrix(helperMatrix, coordinatesClone, 1)) {
+                        setCoordinates([0, 3]);
+                        setHelperMatrix(helperMatrixClone);
+                    }
+
                     console.log('Left key');
-                    
                     return;
                 case 39:
+                    coordinatesClone[1] = coordinatesClone[1] + 1 < 7 ? coordinatesClone[1] + 1 : 6;
+
+                    if (helperMatrix[coordinatesClone[0]][coordinatesClone[1] + 1] === 1) {
+                        coordinatesClone[1] = coordinatesClone[1] - 1;
+                    }
+
+                    setCoordinates([coordinatesClone[0], coordinatesClone[1]]);
+                    helperMatrixClone[coordinatesClone[0]][coordinatesClone[1]] = 1;
+                    helperMatrixClone[coordinatesClone[0]][coordinatesClone[1] + 1] = 1;
+                    setMatrixData(helperMatrixClone);
+
+                    if (checkMatrix(helperMatrix, coordinatesClone, 1)) {
+                        setCoordinates([0, 3]);
+                        setHelperMatrix(helperMatrixClone);
+                    }
+
                     console.log('Right key');
-                    
                     return;
                 case 40:
+                    coordinatesClone[0] = coordinatesClone[0] + 1;
+                    setCoordinates([coordinatesClone[0], coordinatesClone[1]]);
+                    helperMatrixClone[coordinatesClone[0]][coordinatesClone[1]] = 1;
+                    helperMatrixClone[coordinatesClone[0]][coordinatesClone[1] + 1] = 1;
+                    setMatrixData(helperMatrixClone);
+
+                    if (checkMatrix(helperMatrix, coordinatesClone, 1)) {
+                        setCoordinates([0, 3]);
+                        setHelperMatrix(helperMatrixClone);
+                    }
+
+                    if (coordinatesClone[0] === 7) {
+                        setCoordinates([0, 3]);
+                        setHelperMatrix(helperMatrixClone);
+                    }
+
                     console.log('Down key');
-                    
                     return;
                 case 32:
                     console.log('Space key');
@@ -105,9 +115,8 @@ export default function ActionsComponent({
                     return console.log(event);
             }
         },
-        []
+        [setCoordinates, coordinates, helperMatrix, setHelperMatrix, setMatrixData, matrixData]
     );
-
     useEventListener('keydown', handler);
 
     return (

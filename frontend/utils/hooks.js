@@ -63,3 +63,12 @@ export function useEventListener(eventName, handler) {
         [eventName] // Re-run if eventName or window changes
     );
 }
+
+export function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
+export function checkMatrix(matrix, coordinates, down=0) {
+    return !!((matrix[coordinates[0] + down] && matrix[coordinates[0] + down][coordinates[1]] === 1) ||
+        (matrix[coordinates[0] + down] && matrix[coordinates[0] + down][coordinates[1] + 1] === 1));
+}

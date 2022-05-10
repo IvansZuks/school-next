@@ -1,22 +1,22 @@
 export const PERSONES = [
     {
         name: 'Peter',
-        surename: 'Parker'
+        surname: 'Parker'
     },
     {
         name: 'Bruce',
-        surename: 'Li'
+        surname: 'Li'
     },
     {
         name: 'Johhny',
-        surename: 'Depp'
+        surname: 'Depp'
     },
     {
         name: 'Sub',
-        surename: 'Zero'
+        surname: 'Zero'
     },
     {
         name: 'Coca',
-        surename: 'Cola'
+        surname: 'Cola'
     }
 ];

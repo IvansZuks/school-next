@@ -8,7 +8,7 @@ import {
     Field__Matrix__Square_delete
 } from './Field.module.scss';
 
-export default function FieldComponent({ matrixData, fullLine }) {
+export default function FieldComponent({ matrixData, fullLine = false }) {
     const [matrix, setMatrix] = useState([]);
 
     useEffect(() => {

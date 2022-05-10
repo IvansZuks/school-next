@@ -8,7 +8,7 @@ import MenuComponent from '@/components/Menu';
 export default function Team() {
     return (
         <>
-            { /* <TeamComponent name = "Sergey" surename = "Karabanov" />
+            { /* <TeamComponent name = "Sergey" surname = "Karabanov" />
             <AdminSecretComponent image = "111" state='zzz'/>
             <hr/>
             <CalculatorComponent />
