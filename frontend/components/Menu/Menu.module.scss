@@ -1,0 +1,17 @@
+@import '@/styles/abstract/mixins';
+@import '@/styles/abstract/variables';
+
+.MenuMain {
+    border: 2px solid;
+    box-shadow: 0px 2px 2px 2px $color-grey;
+
+    &__List {
+        display: flex;
+        justify-content: space-around;
+        list-style-type: none;
+    };
+
+    &__Item {
+        
+    };
+};

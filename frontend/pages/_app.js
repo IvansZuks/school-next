@@ -3,12 +3,11 @@ import ErrorPage from 'next/error';
 import Head from 'next/head';
 import { DefaultSeo } from 'next-seo';
 
+import ContextProviders from 'context';
 import { getGlobalData } from 'utils/api';
 import { getStrapiMedia } from 'utils/media';
 
 import '@/styles/styles.scss';
-
-import ContextProviders from 'context';
 
 const MyApp = ({ Component, pageProps }) => {
     // Extract the data we need

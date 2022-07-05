@@ -1,0 +1,9 @@
+@import '@/styles/abstract/mixins';
+@import '@/styles/abstract/variables';
+
+.ActionButtons {
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    justify-content: space-between;
+}

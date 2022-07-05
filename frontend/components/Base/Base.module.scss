@@ -1,0 +1,11 @@
+@import '@/styles/abstract/variables';
+
+.Base {
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+
+    &__Title {
+        color: $color-red;
+    }
+}

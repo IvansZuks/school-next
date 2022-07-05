@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 // Got from https://usehooks.com/useLockBodyScroll/
 export function useLockBodyScroll() {
@@ -33,4 +33,30 @@ export function useOnClickOutside(ref, handler) {
             document.removeEventListener('touchstart', listener);
         };
     }, [ref, handler]);
+}
+
+export function useEventListener(eventName, handler) {
+    const savedHandler = useRef();
+    
+    useEffect(() => {
+        savedHandler.current = handler;
+    }, [handler]);
+    
+    useEffect(
+        () => {
+            const isSupported = window && window.addEventListener;
+            if (!isSupported) return;
+            const eventListener = (event) => savedHandler.current(event);
+            window.addEventListener(eventName, eventListener);
+            
+            return () => {
+                window.removeEventListener(eventName, eventListener);
+            };
+        },
+        [eventName]
+    );
+}
+
+export function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }

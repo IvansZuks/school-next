@@ -1,0 +1,49 @@
+@import '@/styles/abstract/mixins';
+@import '@/styles/abstract/variables';
+
+.MainWrapper {
+    border: 3px solid black;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-gap: 4px;
+    margin: 20px;
+    overflow: hidden;
+    width: 800px;
+
+    &__Cell {
+        border: 1px solid black;
+        height: 89px;
+        width: 100%;
+        
+        &_active {
+            animation-duration: 200ms;
+            animation-name: fallingCube;
+            background: black;
+            position: relative;
+            transition: opacity 300ms;
+            
+            @keyframes fallingCube{
+                // 0%{ top: -500px };
+                // 25%{ top: 0 };
+                // 50%{ top: -50px };
+                // 100%{ top: 0 };
+    
+                from{ top: -1000px }
+                to{ top: 0 }
+            }
+        }
+        
+        &_delete {
+            background: red;
+            opacity: 0
+
+            // animation-duration: 300ms;
+            // animation-name: cellFading;
+
+            // @keyframes cellFading {
+            //     from{ opacity: 1 };
+            //     to{ opacity: 0 };
+            // }
+        }
+    }
+}

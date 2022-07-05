@@ -1,0 +1,13 @@
+@import '@/styles/abstract/mixins';
+
+.ProjectAnother {
+    color: blue;
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    padding: 15px;
+
+    @include desktop {
+        padding: 30px;
+    }
+}

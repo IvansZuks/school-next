@@ -1,0 +1,9 @@
+@import '@/styles/abstract/variables';
+
+.BannerFooter {
+    border: 1px solid $color-black;
+
+    &__Image {
+        max-width: 100%;
+    }
+}
